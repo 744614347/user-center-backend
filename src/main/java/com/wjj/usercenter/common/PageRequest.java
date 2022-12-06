@@ -19,7 +19,7 @@ public class PageRequest implements Serializable {
     protected int pageSize = 10;
 
     /**
-     * 当前查询第几页
+     * 当前是第几页
      */
     protected int pageNum = 1;
 
