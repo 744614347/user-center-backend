@@ -7,7 +7,9 @@ import com.wjj.usercenter.common.ErrorCode;
 import com.wjj.usercenter.common.ResultUtils;
 import com.wjj.usercenter.exception.BusinessException;
 import com.wjj.usercenter.model.domain.Team;
+import com.wjj.usercenter.model.domain.User;
 import com.wjj.usercenter.model.dto.TeamQuery;
+import com.wjj.usercenter.model.request.TeamAddRequest;
 import com.wjj.usercenter.service.TeamService;
 import com.wjj.usercenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -35,15 +38,15 @@ public class TeamController {
     private TeamService teamService;
 
     @PostMapping("/add")
-    public BaseResponse<Long> addTeam(@RequestBody Team team) {
-        if (team == null) {
+    public BaseResponse<Long> addTeam(@RequestBody TeamAddRequest teamAddRequest, HttpServletRequest request) {
+        if (teamAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean result = teamService.save(team);
-        if (!result) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "插入失败");
-        }
-        return ResultUtils.success(team.getId());
+        Team team = new Team();
+        BeanUtils.copyProperties(teamAddRequest, team);
+        User loginUser = userService.getLoginUser(request);
+        long teamId = teamService.addTeam(team, loginUser);
+        return ResultUtils.success(teamId);
     }
 
     @PostMapping("/delete")
