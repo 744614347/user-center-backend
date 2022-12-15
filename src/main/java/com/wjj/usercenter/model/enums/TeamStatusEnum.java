@@ -7,7 +7,7 @@ public enum TeamStatusEnum {
 
     PUBLIC(0, "公开"),
     PRIVATE(1, "私有"),
-    SELECT(2, "加密");
+    SECRET(2, "加密");
 
     private int value;
 

@@ -195,7 +195,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<User> searchUserByTags(List<String> tagNameList) {
         if (CollectionUtils.isEmpty(tagNameList)) {
-            throw new BusinessException(ErrorCode.PARAMS_NULL_ERROR);
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         // 1. 先查询所有用户
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -231,7 +231,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         User oldUser = userMapper.selectById(userId);
         if (oldUser == null) {
-            throw new BusinessException(ErrorCode.PARAMS_NULL_ERROR);
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         return userMapper.updateById(user);
     }
@@ -285,7 +285,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Deprecated
     private List<User> searchUserByTagsBySQL(List<String> tagNameList) {
         if (CollectionUtils.isEmpty(tagNameList)) {
-            throw new BusinessException(ErrorCode.PARAMS_NULL_ERROR);
+            throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         // 拼接 and 查询
