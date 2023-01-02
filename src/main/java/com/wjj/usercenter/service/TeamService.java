@@ -5,6 +5,7 @@ import com.wjj.usercenter.model.domain.Team;
 import com.wjj.usercenter.model.domain.User;
 import com.wjj.usercenter.model.dto.TeamQuery;
 import com.wjj.usercenter.model.request.TeamJoinRequest;
+import com.wjj.usercenter.model.request.TeamQuitRequest;
 import com.wjj.usercenter.model.request.TeamUpdateRequest;
 import com.wjj.usercenter.model.vo.TeamUserVO;
 
@@ -27,12 +28,14 @@ public interface TeamService extends IService<Team> {
 
     /**
      * 搜索队伍
+     *
      * @return
      */
     List<TeamUserVO> listTeams(TeamQuery teamQuery, boolean isAdmin);
 
     /**
      * 更新队伍
+     *
      * @param teamUpdateRequest
      * @param loginUser
      * @return
@@ -41,8 +44,27 @@ public interface TeamService extends IService<Team> {
 
     /**
      * 加入队伍
+     *
      * @param teamJoinRequest
+     * @param loginUser
      * @return
      */
     boolean joinTeam(TeamJoinRequest teamJoinRequest, User loginUser);
+
+    /**
+     * 退出队伍
+     *
+     * @param teamQuitRequest
+     * @param loginUser
+     * @return
+     */
+    boolean quitTeam(TeamQuitRequest teamQuitRequest, User loginUser);
+
+    /**
+     * 删除（解散）队伍
+     *
+     * @param id
+     * @return
+     */
+    boolean deleteTeam(long id, User loginUser);
 }

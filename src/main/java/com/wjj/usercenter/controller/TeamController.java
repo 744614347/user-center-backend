@@ -11,6 +11,7 @@ import com.wjj.usercenter.model.domain.User;
 import com.wjj.usercenter.model.dto.TeamQuery;
 import com.wjj.usercenter.model.request.TeamAddRequest;
 import com.wjj.usercenter.model.request.TeamJoinRequest;
+import com.wjj.usercenter.model.request.TeamQuitRequest;
 import com.wjj.usercenter.model.request.TeamUpdateRequest;
 import com.wjj.usercenter.model.vo.TeamUserVO;
 import com.wjj.usercenter.service.TeamService;
@@ -52,18 +53,6 @@ public class TeamController {
         return ResultUtils.success(teamId);
     }
 
-    @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteTeam(@RequestBody long id) {
-        if (id <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        boolean result = teamService.removeById(id);
-        if (!result) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "删除失败");
-        }
-        return ResultUtils.success(true);
-    }
-
     @PostMapping("/update")
     public BaseResponse<Boolean> updateTeam(@RequestBody TeamUpdateRequest teamUpdateRequest, HttpServletRequest request) {
         if (teamUpdateRequest == null) {
@@ -77,7 +66,6 @@ public class TeamController {
         return ResultUtils.success(true);
     }
 
-
     @GetMapping("/get")
     public BaseResponse<Team> getTeamById(long id) {
         if (id <= 0) {
@@ -90,8 +78,6 @@ public class TeamController {
         return ResultUtils.success(team);
     }
 
-
-
     @GetMapping("/list")
     public BaseResponse<List<TeamUserVO>> listTeams(TeamQuery teamQuery, HttpServletRequest request) {
         if (teamQuery == null) {
@@ -102,7 +88,7 @@ public class TeamController {
         return ResultUtils.success(teamList);
     }
 
-
+    // todo 查询分页
     @GetMapping("/list/page")
     public BaseResponse<Page<Team>> listTeamsByPage(TeamQuery teamQuery) {
         if (teamQuery == null) {
@@ -128,5 +114,27 @@ public class TeamController {
 
     }
 
+    @PostMapping("/quit")
+    public BaseResponse<Boolean> quitTeam(@RequestBody TeamQuitRequest teamQuitRequest, HttpServletRequest request) {
+        if (teamQuitRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        boolean result = teamService.quitTeam(teamQuitRequest, loginUser);
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("/delete")
+    public BaseResponse<Boolean> deleteTeam(@RequestBody long id, HttpServletRequest request) {
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        boolean result = teamService.deleteTeam(id, loginUser);
+        if (!result) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "删除失败");
+        }
+        return ResultUtils.success(true);
+    }
 
 }
